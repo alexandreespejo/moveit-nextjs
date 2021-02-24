@@ -42,4 +42,26 @@
   color: var(--white);
   font-size: 1.25rem;
   font-weight: 600;
+  transition: all 0.2s ease-in;
+}
+.countDownButton:hover {
+  background-color: var(--blue-dark);
+}
+.countDownButtonActive {
+  background-color: var(--white);
+  color: var(--title);
+}
+.countDownButtonActive:not(:disabled):hover {
+  background-color: var(--red);
+  color: var(--white);
+}
+.countDownButton:disabled {
+  background-color: var(--white);
+  border-bottom: 4px solid var(--green);
+  color: var(--text);
+  cursor: auto;
+}
+.countDownButton:disabled > svg {
+  color: var(--green);
+  margin-left: 1.5rem;
 }
