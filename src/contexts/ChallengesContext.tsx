@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useEffect, useState } from 'react';
 import challenges from '../../challenges.json';
 
 interface Challenges {
@@ -15,6 +15,7 @@ interface ChallengesData {
   resetChallenge: () => void;
   levelUp: () => void;
   startNewChallenge: () => void;
+  completedChallenge: () => void;
 }
 interface ChallengesProps {
   children: ReactNode;
@@ -28,6 +29,10 @@ export function ChallengesContextProvider({ children }: ChallengesProps) {
   const [challengesCompleted, setChallengesCompleted] = useState(0);
   const [activeChallenge, setActiveChallenge] = useState(null);
 
+  useEffect(() => {
+    Notification.requestPermission();
+  }, []);
+
   const levelUp = () => setLevel(level + 1);
 
   const experienceToNextLevel = Math.pow((level + 1) * 4, 2);
@@ -36,9 +41,28 @@ export function ChallengesContextProvider({ children }: ChallengesProps) {
     const randomChallengeIndex = Math.floor(Math.random() * challenges.length);
     const challenge = challenges[randomChallengeIndex];
     setActiveChallenge(challenge);
+    if (Notification.permission === 'granted') {
+      new Audio('/notification.mp3').play();
+      new Notification('Novo Desafio!', {
+        body: `Valendo ${challenge.amount}xp !`,
+      });
+    }
   };
 
   const resetChallenge = () => setActiveChallenge(null);
+
+  const completedChallenge = () => {
+    if (!activeChallenge) return;
+    const { amount } = activeChallenge;
+    let finalExperience = currentExperience + amount;
+    if (finalExperience >= experienceToNextLevel) {
+      finalExperience -= experienceToNextLevel;
+      levelUp();
+    }
+    setCurrentExperience(finalExperience);
+    resetChallenge();
+    setChallengesCompleted(challengesCompleted + 1);
+  };
 
   return (
     <ChallengesContext.Provider
@@ -51,6 +75,7 @@ export function ChallengesContextProvider({ children }: ChallengesProps) {
         startNewChallenge,
         resetChallenge,
         experienceToNextLevel,
+        completedChallenge,
       }}
     >
       {children}

@@ -5,6 +5,7 @@ import { Profile } from '../components/Profile';
 import Head from 'next/head';
 import styles from '../styles/pages/Home.module.css';
 import { ChallengeBox } from '../components/ChallengeBox';
+import { CountDownContextProvider } from '../contexts/CountDownContext';
 export default function Home() {
   return (
     <div className={styles.container}>
@@ -12,16 +13,18 @@ export default function Home() {
         <title>Inicio | move.it</title>
       </Head>
       <ExperienceBar />
-      <section>
-        <div>
-          <Profile />
-          <CompletedChallenges />
-          <CountDown />
-        </div>
-        <div>
-          <ChallengeBox />
-        </div>
-      </section>
+      <CountDownContextProvider>
+        <section>
+          <div>
+            <Profile />
+            <CompletedChallenges />
+            <CountDown />
+          </div>
+          <div>
+            <ChallengeBox />
+          </div>
+        </section>
+      </CountDownContextProvider>
     </div>
   );
 }
