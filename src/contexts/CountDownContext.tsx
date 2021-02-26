@@ -23,7 +23,7 @@ export function CountDownContextProvider({ children }: CountDownProps) {
 
   let countDownTimeOut: NodeJS.Timeout;
 
-  const [time, setTime] = useState(0.1 * 60);
+  const [time, setTime] = useState(25 * 60);
   const [isActive, setIsActive] = useState(false);
   const [hasFinished, setHasFinished] = useState(false);
 
@@ -35,7 +35,7 @@ export function CountDownContextProvider({ children }: CountDownProps) {
     clearTimeout(countDownTimeOut);
     setHasFinished(false);
     setIsActive(false);
-    setTime(0.1 * 60);
+    setTime(25 * 60);
   };
 
   useEffect(() => {
